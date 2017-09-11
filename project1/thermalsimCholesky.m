@@ -16,9 +16,9 @@ function [ Temperature ] = thermalsimCholesky( p, mediumX, mediumY, leftBound, r
 
   [m, n] = size(p);
   [A, B] = linearEquationGen(p, mediumX, mediumY, leftBound, rightBound, topBound, bottomBound);
-  %A = cholesky(A);
+  %A = choleskyDecom(A);
   A = chol(A, 'lower');
   %C*C'*T = B => C*X = B, C'T = X
   T = choleskySolver(A,B);
-  Temperature = reshape(T, size(p));
+  Temperature = reshape(T, n, m);
 end

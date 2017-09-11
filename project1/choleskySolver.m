@@ -15,7 +15,7 @@ function [X] = choleskySolver(A, B)
   X = zeros(n,1);
   for i = n : -1 : 1
     tempSum = 0;
-    for j = i : n-1
+    for j = i+1 : n
       tempSum += A(i,j)*X(j);
     end
     X(i) = (V(i) - tempSum) / A(i,i);

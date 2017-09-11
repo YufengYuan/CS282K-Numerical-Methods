@@ -39,18 +39,18 @@ function [B] = RHS(p, leftBound, rightBound, topBound, bottomBound, mediumX, med
   end
 end
 
-function [Tc] = boundValue(x, y, m, n, leftBound, rightBound, topBound, bottomBound, mediumX, mediumY)
+function [Tc] = boundValue(i, j, m, n, leftBound, rightBound, topBound, bottomBound, mediumX, mediumY)
   Tc = 0;
-  if x == 1
-    Tc += leftBound(y)*mediumX^2;
+  if i == 1
+    Tc += bottomBound(i)*mediumY^2;
   end
-  if x == m
-    Tc += rightBound(y)*mediumX^2;
+  if i == m
+    Tc += topBound(i)*mediumY^2;
   end
-  if y == 1
-    Tc += bottomBound(x)*mediumY^2;
+  if j == 1
+    Tc += leftBound(j)*mediumX^2;
   end
-  if y == n
-    Tc += topBound(x)*mediumY^2;
+  if j == n
+    Tc += rightBound(j)*mediumX^2;
   end
 end
