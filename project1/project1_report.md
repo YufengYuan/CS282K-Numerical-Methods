@@ -41,7 +41,6 @@ $$
 A\cdot X = B\\
 X=[T_{1,1}, T_{1,2},...,T_{M,N}]^T
 $$
-##### 2.Linear System Solver
 When M = N = 2, the simplest linear equations are shown below
 $$
 \begin{bmatrix}
@@ -49,11 +48,10 @@ $$
 -\Delta x^2 & 2(\Delta x^2+\Delta y^2) & 0 & -\Delta y^2\\
 -\Delta y^2 & 0 & 2(\Delta x^2+\Delta y^2) & -\Delta x^2\\
 0 & -\Delta y^2 & -\Delta x^2 & 2(\Delta x^2+\Delta y^2)\\
-\end{bmatrix}*\\
+\end{bmatrix}*
 \begin{bmatrix}
 T_{1,1}\\T_{1,2}\\T_{2,1}\\T_{2,2}
 \end{bmatrix}=
-
 \begin{bmatrix}
 \frac{\Delta x^2 \Delta y^2f(1,1)}{\kappa}+T_{c_{1,1}}\\
 \frac{\Delta x^2 \Delta y^2f(1,2)}{\kappa}+T_{c_{1,2}}\\
@@ -61,18 +59,17 @@ T_{1,1}\\T_{1,2}\\T_{2,1}\\T_{2,2}
 \frac{\Delta x^2 \Delta y^2f(2,2)}{\kappa}+T_{c_{2,2}}
 \end{bmatrix}
 $$
+##### 2.Linear System Solver
+
 For the linear system$$$ A\cdot X=B$$$, $$$ A$$$ is a positive definite matrix which we can apply Cholesky Factorization.
 $$
 A=C \cdot C'
 $$
-The original equation can be written as
+So the original equation can be written as
 $$
-\begin{cases}
-CV=B\\
-C'X = V
-\end{cases}
+C \cdot C' \cdot X = B
 $$
-This is the naive implementation of Cholesky Decomposition which is not effecient enough for the problem, so I implemented a new one?
+This is my implementation of Cholesky Decomposition
 ```matlab
 function [S] = choleskyDecom(A)
   [n,n] = size(A);
@@ -83,7 +80,15 @@ function [S] = choleskyDecom(A)
   end
 end
 ```
-$$$ C $$$ and $$$C'$$$ are lower-triangular and upper-triangular matrix, the equations can be easily solved by back-substitution
+Now our task becomes to solve the following two equations, but it's much easier
+$$
+\begin{cases}
+CV=B\\
+C'X = V
+\end{cases}
+$$
+
+$$$ C $$$ and $$$C'$$$ are lower-triangular and upper-triangular matrix, the equations can be easily solved by backward substitution
 ```matlab
 function [X] = choleskySolver(A, B)
   %solve the outer loop of the linear equations
@@ -101,15 +106,18 @@ function [X] = choleskySolver(A, B)
 end
 ```
 ##### 3.Experimental Results
-The left side are original thermal distributions and the right side are thermal distributions of steady state
-case1 runtime = 13.0667s
+The left side are original thermal distributions and the right side are the thermal distributions of steady state
+Case 1
+Runtime = 13.0667s
 ![](./case1.png)
-case2 runtime = 169.576s
+Case 2
+Runtime = 169.576s
 ![](./case2.png)
-case3 runtime = 1074.8s
+Case 3
+Runtime = 1074.8s
 ![](./case3.png)
 ##### 4.Discussion
-Using vector operations can greatly accelerate the computation. Originally, I implemented the CholeskyDecomposition and BackSubstitution in a very naive way which means a lot of 'for' loops. It took 3032.15 seconds to solve case 1, so I realised I wouldn't get the solution for case 3 with such naive implementation. The original code are shown below.
+Using vector operations can greatly accelerate the computation. Originally, I implemented the CholeskyDecomposition and BackSubstitution in a very naive way which means a lot of 'for' loops. It took 3032.15 seconds to solve case 1, which means I wouldn't get the solution for case 3 with such naive implementation. The original code are shown below.
 ```matlab
 %Cholesky Decomposition naive version
 for j = 1 : n
@@ -150,11 +158,7 @@ It looks like a lot of progress, but I compared the built-in chol() function and
 |:----------:|:--------------:|:------------------:|
 | 50 * 50    | 0.00136s 		  | 0.01781s |
 | 200 * 200   | 0.00212s 		  | 0.08110s  |
-| 500 * 500   | 0.00212s 		  | 0.08110s  |
-| 1000 * 1000 | 0.00212s 		  | 0.08110s  |
-| 2000 * 2000 | 0.00212s 		  | 0.08110s  |
+| 500 * 500   | 0.00980s 		  | 1.0816s  |
+| 1000 * 1000 | 0.01855s 		  | 13.1817s  |
+Someone also asked this question why the built-in chol() is so fast on Matlab forum, but there's no exact answer to it. And I think the key is to get rid of the last loop in my function, but I can't figure out how to do that without using backslash. One of my hypothesis is that they might use a totally different algorithms for chol() which makes it so fast.
 
-
-
-##### 5.Extra
-##### References
