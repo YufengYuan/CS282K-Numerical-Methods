@@ -5,18 +5,20 @@ yy208@duke.edu
 - - -
 
 ##### Abstract
+In this project, for a given image, we need to sample some poxel points in the image and to recover the original image. For the sampling process, we segment the test set randomly and train the model on current training set several times to find the best hyperparameter with cross-validation. For the sampled points, with Discrete Cosine Tranformation, we can form an under-determined linar system which could be solved by Onthagonal Match Pursuit. Then, we would have the sparse solution for the OMP coefficients which enable us to recover the image with Inverse Discrete Cosine Transformation. The accuracy of the recovery could be measured by a given function.
 
 ##### 1.Overview
-
+First, I implemented a function for random sampling with a Matlab built-in function randomperm which ensures that there's no repeated points in the samples. For the robustness and simplicity, I implemented one function generating the under-determined lieanr system of Discrete Cosine Tranformation. For the function OMPSolver, I implemented the function with some matrix operation techniques in Matlab to improve the running efficienty.
 ##### 2.Mathematical Formulation
-A 2-D image can be mapped to frequency domain by discrete cosine tranform(DCT)
+Wrong Wrong Wrong !!!
+A 2-D image can be mapped to frequency domain by discrete cosine tranform (DCT)
 $$
 G(u,v)=\sum^P_{x=1}\sum^Q_{y=1}a_u \cdot b_v \cdot g(x,y) \cdot cos \frac{\pi(2x-1)(u-1)}{2 \cdot P} \cdot cos \frac{\pi (2y-1)(v-1)}{2 \cdot Q}
 \\
 x,u \in \{1,2,...P\}\\
 y,v \in \{1,2,...Q\}\\
 
-a_u=\left\{
+a_u=\left\{st 
 \begin{aligned}
 \sqrt \frac{1}{P} &\ (u=1)\\
 \sqrt \frac{2}{P} &\ (2 \leq u \leq P)\\
@@ -65,6 +67,27 @@ G(1,2)\\
 \vdots\\
 G()
 \end{bmatrix}
+$$
+The implementation of OMP algorithm
+$$
+\min_\alpha \Vert A \alpha - B\Vert^2_2\\
+S.T. \Vert \alpha \Vert_0 \leq \lambda
+$$
+Step 1: Set F = B, $$$ \Omega = \{\}$$$ and p = 1
+Step 2: Calculate the inner product values $$$ \theta_i = <A_i, F>$$$
+Step 3: Identify the index s for which $$$\vert \theta_s\vert$$$ takes the largest number
+Step 4: Update $$$\Omega $$$ by $$$\Omega = \Omega \cup \{s\}$$$
+Step5: Approximate F by the linear combination of $$$ \{ A_i, i \in \Omega \} $$$
+$$
+\min_{a_i,j \in \Omega} \Vert \sum_{i\in\Omega }\alpha_i \cdot A - B \Vert_2^2
+$$
+Step 6: Update F
+$$
+F = B - \sum_{i \in \Omega}\alpha_i \cdot A
+$$
+Step 7: if p $$$ \le \lambda $$$, p = p + 1 and go to Step 2. Otherwise, stop.
+$$
+\alpha_i = 0 (i \notin \Omega)
 $$
 ##### 3.Experimental Results
 

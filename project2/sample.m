@@ -1,6 +1,12 @@
 function samplePoints = sample(imgIn, blockSize, sampleNum)
   [h,w] = size(imgIn);
-  imgBlock = reshape(imgIn, h*w/blockSize^2, blockSize, blockSize);
+  imgBlock = zeros(h*w/blockSize^2, blockSize, blockSize);
+  for i = 1:h*w/blockSize^2
+    x = floor((i-1)/(w/blockSize));
+    y = mod(i-1,(w/blockSize));
+    block = imgIn(x*blockSize+1:x*blockSize+blockSize, y*blockSize+1:y*blockSize+blockSize);
+    imgBlock(i,:,:) = reshape(block, 1, blockSize, blockSize);
+  end
   %just for testing
   perm = randperm(blockSize^2);
   samplePoints = zeros(h*w/blockSize^2, sampleNum, 3);
