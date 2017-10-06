@@ -7,7 +7,6 @@ function [lambda] = crossVal(p, h, w, blockSize, lambdas)
       trainP = p(1,order,:)(1,(floor(size(p)(2)/6)+1):size(p)(2),:);
       c = OMPSolver(p, blockSize, lambdas(l));
       img = inverseDCT(c, h, w, blockSize);
-      %median filtering here?
       for i=1:floor(size(p)(2)/6)
         x = testP(1,i,2);
         y = testP(1,i,3);

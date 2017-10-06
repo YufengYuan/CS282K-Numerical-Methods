@@ -20,12 +20,8 @@ function C = OMPSolver(points, blockSize, lambda)
   for j = 1:size(B)(2)
     F = B(:,j);omega = [];
     for i = 1:lambda
-      %A should be normalized first
-      [value, index] = max(F' * A);% ./ sqrt(sum(A.^2)));
-      #A * F
-      %F'*A
+      [value, index] = max(F' * A);
       omega = [omega, index];
-      % not sure if backslash is allowed here
       alpha = A(:, omega) \ B(:,j);
       F = B(:,j) - A(:, omega) * alpha;
     end
